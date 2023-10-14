@@ -1,4 +1,4 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useState, useEffect } from "react";
 
 export const ToastContext = createContext();
 
@@ -18,6 +18,19 @@ function ToastProvider({ children }) {
   function dismissToast(id) {
     setToasts(toasts.filter((toast) => toast.id !== id));
   }
+
+  function handleKeyDown(e) {
+    if (e.key === "Escape") {
+      setToasts([]);
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  });
 
   return (
     <ToastContext.Provider value={{ dismissToast, createToast, toasts }}>
